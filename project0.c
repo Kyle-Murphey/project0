@@ -3,10 +3,10 @@
 
 void process_input(char input[], int length)
 {
-  char * underTen[] = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
-  char * underTwenty[] = {"ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"};
-  char * multiplesOfTen[] = {"twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"};
-  char * bigNumbers[] = {"hundred", "thousand", "million"};
+  const char * underTen[] = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
+  const char * underTwenty[] = {"ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"};
+  const char * multiplesOfTen[] = {"twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"};
+  const char * bigNumbers[] = {"hundred", "thousand", "million"};
 
   int number;
   int flag = 0;
