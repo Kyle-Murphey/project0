@@ -64,7 +64,7 @@ void parseOverThree(char inputArr[], int * digitsLeft, int * pos, char ** output
       --*digitsLeft;
       --*digitsLeft;
     }
-  else if (inputArr[*pos] - '0' == 0 && *digitsLeft % 3 == 0 && inputArr[*pos + 1] - '0' == 0 /*&& inputArr[*pos + 2] - '0' > 0*/)
+  else if (inputArr[*pos] - '0' == 0 && *digitsLeft % 3 == 0 && inputArr[*pos + 1] - '0' == 0)
     {
       ++*pos;
       ++*pos;
@@ -72,7 +72,7 @@ void parseOverThree(char inputArr[], int * digitsLeft, int * pos, char ** output
       --*digitsLeft;
     }
   //check for double zeros
-  else if (inputArr[*pos] - '0' == 0 && *digitsLeft > 2 && inputArr[*pos + 1] - '0' == 0 /*&& inputArr[*pos + 2] - '0' > 0*/)
+  else if (inputArr[*pos] - '0' == 0 && *digitsLeft > 2 && inputArr[*pos + 1] - '0' == 0)
     {
       ++*pos;
       ++*pos;
@@ -84,10 +84,39 @@ void parseOverThree(char inputArr[], int * digitsLeft, int * pos, char ** output
 
   if (inputArr[*pos] - '0' > 0 && comFlag != 1)
     {
-      output[*index] = underTen[(inputArr[*pos] - '0') - 1];
-      ++*index;
-      ++*pos;
-      --*digitsLeft;
+      if (*digitsLeft == 2 || *digitsLeft == 5)
+	{
+	  //checks if number is over 19
+	  if (inputArr[*pos] - '0' != 1)
+	    {
+	      output[*index] = multiplesOfTen[(inputArr[*pos] - '0') - 2];
+	      ++*index;
+	      ++*pos;
+	      --*digitsLeft;
+
+	      output[*index] = underTen[(inputArr[*pos] - '0') - 1];
+	      ++*index;
+	      ++*pos;
+	      --*digitsLeft;
+	    }
+	  //digit is a teen
+	  else
+	    {
+	      output[*index] = underTwenty[inputArr[*pos + 1] - '0'];
+	      ++*index;
+	      ++*pos;
+	      ++*pos;
+	      --*digitsLeft;
+	      --*digitsLeft;
+	    }
+	}
+      else
+	{
+	  output[*index] = underTen[(inputArr[*pos] - '0') - 1];
+	  ++*index;
+	  ++*pos;
+	  --*digitsLeft;
+	}
     }
   else if(comFlag == 1 && inputArr[*pos - 1] - '0' == 0 && inputArr[*pos - 2] - '0' == 0)
     {
@@ -240,9 +269,11 @@ int main(int argc, char** argv)
     {
       char buffer[11];
       int length;
-      fgets(buffer, 11, stdin);
-      length = strlen(buffer) - 1;
-      process_input(buffer, length, upperCase);
+      while (fgets(buffer, 11, stdin))
+	{
+	  length = strlen(buffer) - 1;
+	  process_input(buffer, length, upperCase);
+	}
     }
   else if (argc > 2 || *argv[1] != 'u')
     {
@@ -253,8 +284,10 @@ int main(int argc, char** argv)
       upperCase = 1;
       char buffer[11];
       int length;
-      fgets(buffer, 11, stdin);
-      length = strlen(buffer) - 1;
-      process_input(buffer, length, upperCase);
+      while (fgets(buffer, 11, stdin))
+	{
+	  length = strlen(buffer) - 1;
+	  process_input(buffer, length, upperCase);
+	}
     }
 }
