@@ -1,3 +1,7 @@
+/*
+  Project 0
+  @author: Kyle Murphey
+*/
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
