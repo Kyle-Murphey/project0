@@ -23,8 +23,9 @@ static char * bigNumbers[] = {"hundred", "thousand", "million"};
  * @param:pos = reference to current position in array
  * @param:output = reference to array of strings in which the worded output is stored
  * @param:index = reference to next index to store word in output array
+ * @param:firstDigit = reference to flag for whether or not the first digit has been read
  */
-void parseOverThree(char inputArr[], int * digitsLeft, int * pos, char ** output, int * index)
+void parseOverThree(char inputArr[], int * digitsLeft, int * pos, char ** output, int * index, int * firstDigit )
 {
   int comFlag = 0; //flag for sections that finish parsing before hitting all the conditionals
   int number = inputArr[*pos] - '0'; //the value stored in the input array at the current position
@@ -139,7 +140,7 @@ void parseOverThree(char inputArr[], int * digitsLeft, int * pos, char ** output
 	}
     }
   //no increment needed
-  else if(comFlag == 1 && inputArr[*pos - 1] - '0' == 0 && inputArr[*pos - 2] - '0' == 0)
+  else if(comFlag == 1 && inputArr[*pos - 1] - '0' == 0 && inputArr[*pos - 2] - '0' == 0 && *firstDigit == 1)
     {
       
     }
@@ -149,6 +150,7 @@ void parseOverThree(char inputArr[], int * digitsLeft, int * pos, char ** output
       ++*pos;
       --*digitsLeft;
     }
+  *firstDigit = 1; //first digit has been read in
 }
 
 /*
@@ -165,6 +167,8 @@ void process_input(char input[], int length, int upperCase)
   int actualLength = length; //length of int minus leading zeros
   int * ptr_digitsLeft; //number of digits left in the array to parse
   char * output[100]; //output array
+  int firstDigit = 0; //flag for whether or not first digit has been parsed yet
+  int * ptr_firstDigit = &firstDigit;
 
   int index = 0; //index for output array
   int * ptr_index;
@@ -219,21 +223,21 @@ void process_input(char input[], int length, int upperCase)
 	  //millions
 	  if (*ptr_digitsLeft > 6)
 	    {
-	      parseOverThree(input, ptr_digitsLeft, ptr_pos, output, ptr_index);
+	      parseOverThree(input, ptr_digitsLeft, ptr_pos, output, ptr_index, ptr_firstDigit);
 	      output[*ptr_index] = bigNumbers[2];
 	      ++index;
 	    }
 	  //thousands
 	  else if (*ptr_digitsLeft > 3)
 	    {
-	      parseOverThree(input, ptr_digitsLeft, ptr_pos, output, ptr_index);
+	      parseOverThree(input, ptr_digitsLeft, ptr_pos, output, ptr_index, ptr_firstDigit);
 	      output[*ptr_index] = bigNumbers[1];
 	      ++index;
 	    }
 	  //hundreds
 	  else
 	    {
-	      parseOverThree(input, ptr_digitsLeft, ptr_pos, output, ptr_index);
+	      parseOverThree(input, ptr_digitsLeft, ptr_pos, output, ptr_index, ptr_firstDigit);
 	    }
 	}
 
@@ -242,7 +246,7 @@ void process_input(char input[], int length, int upperCase)
       //hundred million
       if (*ptr_digitsLeft == 9)
 	{
-	  parseOverThree(input, ptr_digitsLeft, ptr_pos, output, ptr_index); //parses input for first triplet
+	  parseOverThree(input, ptr_digitsLeft, ptr_pos, output, ptr_index, ptr_firstDigit); //parses input for first triplet
 	  output[*ptr_index] = bigNumbers[2]; //adds "million" to output array
 	  ++index; //inc index in output array
 	  indexChanged = index; //updates indexChanged to current position
@@ -250,7 +254,7 @@ void process_input(char input[], int length, int upperCase)
       //million
       else if (*ptr_digitsLeft == 6)
 	{
-	  parseOverThree(input, ptr_digitsLeft, ptr_pos, output, ptr_index);
+	  parseOverThree(input, ptr_digitsLeft, ptr_pos, output, ptr_index, ptr_firstDigit);
 	  //adds "thousand" if index was changed
 	  if (indexChanged != index)
 	    {
@@ -261,12 +265,12 @@ void process_input(char input[], int length, int upperCase)
       //hundreds
       else if (*ptr_digitsLeft == 3)
 	{
-	  parseOverThree(input, ptr_digitsLeft, ptr_pos, output, ptr_index);
+	  parseOverThree(input, ptr_digitsLeft, ptr_pos, output, ptr_index, ptr_firstDigit);
 	}
       //catches any other value that may get through
       else
 	{
-	  parseOverThree(input, ptr_digitsLeft, ptr_pos, output, ptr_index);
+	  parseOverThree(input, ptr_digitsLeft, ptr_pos, output, ptr_index, ptr_firstDigit);
 	}
     }
   
